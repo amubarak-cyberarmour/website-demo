@@ -1,0 +1,13 @@
+{
+  "tool": "FramerClone",
+  "version": "1.0.0",
+  "clonedAt": "2026-05-08T11:57:14.523Z",
+  "sourceUrl": "https://orbai-template.framer.website/",
+  "stats": {
+    "pages": 8,
+    "assets": 209,
+    "totalSize": 31786161,
+    "duration": 3776
+  },
+  "migrate": false
+}

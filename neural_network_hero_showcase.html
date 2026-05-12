@@ -1,0 +1,418 @@
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #000; }
+
+  .showcase { font-family: 'Georgia', serif; background: #080808; }
+
+  .tabs {
+    display: flex; gap: 0; border-bottom: 1px solid #222;
+    background: #0a0a0a; padding: 0 20px; overflow-x: auto;
+  }
+  .tab {
+    padding: 14px 20px; font-size: 12px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: #555; cursor: pointer;
+    border-bottom: 2px solid transparent; white-space: nowrap;
+    font-family: 'Courier New', monospace; transition: all 0.2s;
+  }
+  .tab.active { color: #fff; border-bottom-color: #fff; }
+  .tab:hover:not(.active) { color: #aaa; }
+
+  .panel { display: none; position: relative; }
+  .panel.active { display: block; }
+
+  canvas { display: block; width: 100%; }
+
+  .label {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 24px 28px; background: linear-gradient(transparent, rgba(0,0,0,0.85));
+    pointer-events: none;
+  }
+  .label h2 { font-size: 22px; font-weight: 400; letter-spacing: 0.06em; margin-bottom: 6px; }
+  .label p { font-size: 13px; letter-spacing: 0.04em; line-height: 1.6; opacity: 0.65; font-family: 'Courier New', monospace; }
+  .label .tag {
+    display: inline-block; font-size: 10px; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 4px 10px; border: 1px solid;
+    border-radius: 2px; margin-bottom: 10px; font-family: 'Courier New', monospace;
+  }
+</style>
+
+<div class="showcase">
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab(0)">01 — Synaptic Constellation</div>
+    <div class="tab" onclick="switchTab(1)">02 — Morphic Field</div>
+    <div class="tab" onclick="switchTab(2)">03 — Living Circuit</div>
+    <div class="tab" onclick="switchTab(3)">04 — Quantum Fog</div>
+  </div>
+
+  <div class="panel active" id="p0">
+    <canvas id="c0" height="380"></canvas>
+    <div class="label" style="color:#e8d5ff">
+      <div class="tag" style="border-color:#9b59ff;color:#9b59ff">Bioluminescent · Dark</div>
+      <h2>Synaptic Constellation</h2>
+      <p>Move cursor to fire synaptic bursts — nodes light up in cascading waves of violet amber</p>
+    </div>
+  </div>
+  <div class="panel" id="p1">
+    <canvas id="c1" height="380"></canvas>
+    <div class="label" style="color:#c8c0b0">
+      <div class="tag" style="border-color:#a09080;color:#a09080">Gravitational · Cream</div>
+      <h2>Morphic Field</h2>
+      <p>Cursor warps the mesh like a gravitational lens — the network reveals itself only near you</p>
+    </div>
+  </div>
+  <div class="panel" id="p2">
+    <canvas id="c2" height="380"></canvas>
+    <div class="label" style="color:#00ffcc">
+      <div class="tag" style="border-color:#00ffcc;color:#00ffcc">PCB Circuit · Black</div>
+      <h2>Living Circuit</h2>
+      <p>Data pulses travel along geometric traces — cursor ignites signal propagation chains</p>
+    </div>
+  </div>
+  <div class="panel" id="p3">
+    <canvas id="c3" height="380"></canvas>
+    <div class="label" style="color:#c8e8ff">
+      <div class="tag" style="border-color:#5599cc;color:#88bbdd">Particle Magnetic · Mist</div>
+      <h2>Quantum Fog</h2>
+      <p>Nodes drift through mist — cursor repels and attracts like opposing magnetic poles</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const canvases = [0,1,2,3].map(i => document.getElementById('c'+i));
+const ctxs = canvases.map(c => { c.width = c.offsetWidth || 680; return c.getContext('2d'); });
+const mouses = [{x:340,y:190},{x:340,y:190},{x:340,y:190},{x:340,y:190}];
+let active = 0;
+const loops = [];
+
+function switchTab(i) {
+  document.querySelectorAll('.tab').forEach((t,j) => t.classList.toggle('active', j===i));
+  document.querySelectorAll('.panel').forEach((p,j) => p.classList.toggle('active', j===i));
+  active = i;
+  resizeAll();
+}
+
+function resizeAll() {
+  canvases.forEach((c,i) => {
+    c.width = c.parentElement.offsetWidth || 680;
+    mouses[i].x = c.width/2; mouses[i].y = 190;
+  });
+}
+
+canvases.forEach((c,i) => {
+  c.addEventListener('mousemove', e => {
+    const r = c.getBoundingClientRect();
+    mouses[i].x = e.clientX - r.left;
+    mouses[i].y = e.clientY - r.top;
+  });
+});
+
+/* ===== CANVAS 0: Synaptic Constellation ===== */
+(function(){
+  const c = canvases[0], ctx = ctxs[0];
+  const nodes = [];
+  const N = 55;
+  function init() {
+    nodes.length = 0;
+    for(let i=0;i<N;i++) nodes.push({
+      x: Math.random()*c.width, y: Math.random()*c.height,
+      vx: (Math.random()-.5)*0.3, vy: (Math.random()-.5)*0.3,
+      r: 2+Math.random()*3, energy: 0,
+      hue: 260+Math.random()*60
+    });
+  }
+  init();
+  function frame() {
+    if(active===0) requestAnimationFrame(frame);
+    const W=c.width, H=c.height, m=mouses[0];
+    ctx.fillStyle='rgba(4,0,12,0.18)';
+    ctx.fillRect(0,0,W,H);
+
+    nodes.forEach(n=>{
+      n.x+=n.vx; n.y+=n.vy;
+      if(n.x<0||n.x>W) n.vx*=-1;
+      if(n.y<0||n.y>H) n.vy*=-1;
+      const dx=m.x-n.x, dy=m.y-n.y, d=Math.sqrt(dx*dx+dy*dy);
+      if(d<120) n.energy = Math.min(1, n.energy + (1-d/120)*0.08);
+      n.energy *= 0.96;
+    });
+
+    for(let i=0;i<nodes.length;i++){
+      for(let j=i+1;j<nodes.length;j++){
+        const a=nodes[i], b=nodes[j];
+        const dx=a.x-b.x, dy=a.y-b.y, d=Math.sqrt(dx*dx+dy*dy);
+        if(d<130){
+          const e=(a.energy+b.energy)/2;
+          const alpha=(1-d/130)*0.35*(0.2+e*0.8);
+          const hue=a.hue+(b.hue-a.hue)*0.5;
+          ctx.beginPath();
+          ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y);
+          ctx.strokeStyle=`hsla(${hue},80%,${55+e*30}%,${alpha})`;
+          ctx.lineWidth=0.5+e*1.5;
+          ctx.stroke();
+        }
+      }
+    }
+
+    nodes.forEach(n=>{
+      const e=n.energy;
+      if(e>0.1){
+        const g=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,n.r*4*(1+e*3));
+        g.addColorStop(0,`hsla(${n.hue},90%,80%,${0.4+e*0.5})`);
+        g.addColorStop(1,'transparent');
+        ctx.beginPath(); ctx.arc(n.x,n.y,n.r*4*(1+e*3),0,Math.PI*2);
+        ctx.fillStyle=g; ctx.fill();
+      }
+      ctx.beginPath(); ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+      ctx.fillStyle=`hsla(${n.hue},70%,${60+e*35}%,${0.6+e*0.4})`;
+      ctx.fill();
+    });
+  }
+  loops[0] = frame; frame();
+})();
+
+/* ===== CANVAS 1: Morphic Field ===== */
+(function(){
+  const c = canvases[1], ctx = ctxs[1];
+  const pts = [];
+  const COLS=22, ROWS=13;
+  function init(){
+    pts.length=0;
+    for(let r=0;r<=ROWS;r++) for(let col=0;col<=COLS;col++){
+      pts.push({
+        ox: (col/COLS)*c.width, oy: (r/ROWS)*c.height,
+        x:0,y:0, vx:0,vy:0
+      });
+    }
+  }
+  init();
+  function frame(){
+    if(active===1) requestAnimationFrame(frame);
+    const W=c.width, H=c.height, m=mouses[1];
+    ctx.fillStyle='rgba(248,244,235,0.85)';
+    ctx.fillRect(0,0,W,H);
+
+    pts.forEach(p=>{
+      const dx=m.x-p.ox, dy=m.y-p.oy;
+      const d=Math.sqrt(dx*dx+dy*dy);
+      const force = Math.max(0,1-d/180)*60;
+      const tx=p.ox+dx/d*force*(d<1?0:1);
+      const ty=p.oy+dy/d*force*(d<1?0:1);
+      p.vx+=(tx-p.x)*0.12; p.vy+=(ty-p.y)*0.12;
+      p.vx*=0.72; p.vy*=0.72;
+      p.x+=p.vx; p.y+=p.vy;
+    });
+
+    const idx=(r,col)=>r*(COLS+1)+col;
+    ctx.lineWidth=0.8;
+    for(let r=0;r<=ROWS;r++){
+      for(let col=0;col<=COLS;col++){
+        const p=pts[idx(r,col)];
+        const dx=m.x-p.ox, dy=m.y-p.oy;
+        const d=Math.sqrt(dx*dx+dy*dy);
+        const prox=Math.max(0,1-d/180);
+        const alpha=0.08+prox*0.55;
+        ctx.strokeStyle=`rgba(100,85,65,${alpha})`;
+        if(col<COLS){
+          const q=pts[idx(r,col+1)];
+          ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(q.x,q.y); ctx.stroke();
+        }
+        if(r<ROWS){
+          const q=pts[idx(r+1,col)];
+          ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(q.x,q.y); ctx.stroke();
+        }
+        if(prox>0.05){
+          ctx.beginPath(); ctx.arc(p.x,p.y,1.5+prox*3,0,Math.PI*2);
+          ctx.fillStyle=`rgba(80,60,40,${0.2+prox*0.7})`; ctx.fill();
+        }
+      }
+    }
+  }
+  loops[1]=frame; frame();
+})();
+
+/* ===== CANVAS 2: Living Circuit ===== */
+(function(){
+  const c=canvases[2], ctx=ctxs[2];
+  const nodes=[], edges=[], pulses=[];
+  function init(){
+    nodes.length=0; edges.length=0;
+    const cols=10, rows=6;
+    for(let r=0;r<rows;r++) for(let col=0;col<cols;col++){
+      nodes.push({
+        x: 40+(col/(cols-1))*(c.width-80),
+        y: 40+(r/(rows-1))*(c.height-80),
+        active:0, lit:0
+      });
+    }
+    nodes.forEach((n,i)=>{
+      nodes.forEach((m,j)=>{
+        if(i>=j) return;
+        const dx=n.x-m.x, dy=n.y-m.y, d=Math.sqrt(dx*dx+dy*dy);
+        if(d<120 && Math.random()<0.65) edges.push({a:i,b:j,d});
+      });
+    });
+  }
+  init();
+  let tick=0;
+  function frame(){
+    if(active===2) requestAnimationFrame(frame);
+    tick++;
+    const W=c.width, H=c.height, m=mouses[2];
+    ctx.fillStyle='rgba(0,4,3,0.2)';
+    ctx.fillRect(0,0,W,H);
+
+    nodes.forEach((n,i)=>{
+      const dx=m.x-n.x, dy=m.y-n.y, d=Math.sqrt(dx*dx+dy*dy);
+      if(d<80&&Math.random()<0.04) n.active=1;
+      if(n.active>0){
+        n.lit=Math.min(1,n.lit+0.15);
+        if(n.lit>0.8 && Math.random()<0.3){
+          edges.filter(e=>e.a===i||e.b===i).forEach(e=>{
+            const ni=e.a===i?e.b:e.a;
+            if(nodes[ni].lit<0.3) pulses.push({ei:edges.indexOf(e),t:0,from:i});
+          });
+        }
+        n.active--;
+      } else {
+        n.lit=Math.max(0,n.lit-0.03);
+      }
+    });
+
+    for(let i=pulses.length-1;i>=0;i--){
+      const p=pulses[i]; p.t+=0.04;
+      if(p.t>=1){ const e=edges[p.ei]; const ni=e.a===p.from?e.b:e.a; nodes[ni].active=8; pulses.splice(i,1); }
+    }
+
+    edges.forEach(e=>{
+      const a=nodes[e.a], b=nodes[e.b];
+      const lit=(a.lit+b.lit)/2;
+      ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y);
+      ctx.strokeStyle=`rgba(0,${Math.floor(180+lit*75)},${Math.floor(100+lit*100)},${0.08+lit*0.5})`;
+      ctx.lineWidth=0.5+lit*1.5; ctx.stroke();
+    });
+
+    pulses.forEach(p=>{
+      const e=edges[p.ei];
+      const a=nodes[e.a], b=nodes[e.b];
+      const fwd=e.a===p.from;
+      const sx=fwd?a.x:b.x, sy=fwd?a.y:b.y;
+      const ex=fwd?b.x:a.x, ey=fwd?b.y:a.y;
+      const px=sx+(ex-sx)*p.t, py=sy+(ey-sy)*p.t;
+      const g=ctx.createRadialGradient(px,py,0,px,py,10);
+      g.addColorStop(0,'rgba(0,255,200,0.9)');
+      g.addColorStop(1,'transparent');
+      ctx.beginPath(); ctx.arc(px,py,10,0,Math.PI*2);
+      ctx.fillStyle=g; ctx.fill();
+    });
+
+    nodes.forEach(n=>{
+      ctx.beginPath(); ctx.arc(n.x,n.y,3+n.lit*3,0,Math.PI*2);
+      ctx.fillStyle=`rgba(0,${Math.floor(200+n.lit*55)},${Math.floor(150+n.lit*80)},${0.4+n.lit*0.6})`;
+      ctx.fill();
+      if(n.lit>0.3){
+        const g=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,20);
+        g.addColorStop(0,`rgba(0,255,180,${n.lit*0.4})`);
+        g.addColorStop(1,'transparent');
+        ctx.beginPath(); ctx.arc(n.x,n.y,20,0,Math.PI*2);
+        ctx.fillStyle=g; ctx.fill();
+      }
+    });
+  }
+  loops[2]=frame; frame();
+})();
+
+/* ===== CANVAS 3: Quantum Fog ===== */
+(function(){
+  const c=canvases[3], ctx=ctxs[3];
+  const nodes=[], particles=[];
+  const N=50;
+  function init(){
+    nodes.length=0;
+    for(let i=0;i<N;i++) nodes.push({
+      x:Math.random()*c.width, y:Math.random()*c.height,
+      vx:(Math.random()-.5)*0.4, vy:(Math.random()-.5)*0.4,
+      r:2+Math.random()*4, alpha:0.3+Math.random()*0.5,
+      hue:190+Math.random()*40, speed:0.3+Math.random()*0.4
+    });
+    particles.length=0;
+    for(let i=0;i<80;i++) particles.push({
+      x:Math.random()*c.width, y:Math.random()*c.height,
+      vx:(Math.random()-.5)*0.6, vy:(Math.random()-.5)*0.6,
+      alpha:0.05+Math.random()*0.15, r:1
+    });
+  }
+  init();
+  function frame(){
+    if(active===3) requestAnimationFrame(frame);
+    const W=c.width, H=c.height, m=mouses[3];
+    ctx.fillStyle='rgba(8,12,18,0.15)';
+    ctx.fillRect(0,0,W,H);
+
+    const fog=ctx.createRadialGradient(W/2,H/2,0,W/2,H/2,W*0.7);
+    fog.addColorStop(0,'rgba(20,35,55,0.02)');
+    fog.addColorStop(1,'rgba(5,10,20,0.05)');
+    ctx.fillStyle=fog; ctx.fillRect(0,0,W,H);
+
+    particles.forEach(p=>{
+      const dx=m.x-p.x, dy=m.y-p.y, d=Math.sqrt(dx*dx+dy*dy);
+      if(d<200){ p.vx-=dx/d*0.015; p.vy-=dy/d*0.015; }
+      p.vx*=0.98; p.vy*=0.98;
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.x<0)p.x=W; if(p.x>W)p.x=0;
+      if(p.y<0)p.y=H; if(p.y>H)p.y=0;
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(120,180,220,${p.alpha})`; ctx.fill();
+    });
+
+    nodes.forEach(n=>{
+      const dx=m.x-n.x, dy=m.y-n.y, d=Math.sqrt(dx*dx+dy*dy);
+      const repel=d<150?1:d<300?-0.3:0;
+      n.vx+=(-dx/Math.max(d,1))*repel*0.06;
+      n.vy+=(-dy/Math.max(d,1))*repel*0.06;
+      n.vx*=0.93; n.vy*=0.93;
+      const spd=Math.sqrt(n.vx*n.vx+n.vy*n.vy);
+      if(spd>1.5){n.vx/=spd*0.7;n.vy/=spd*0.7;}
+      n.x+=n.vx; n.y+=n.vy;
+      if(n.x<0)n.x=W; if(n.x>W)n.x=0;
+      if(n.y<0)n.y=H; if(n.y>H)n.y=0;
+    });
+
+    for(let i=0;i<nodes.length;i++){
+      for(let j=i+1;j<nodes.length;j++){
+        const a=nodes[i], b=nodes[j];
+        const dx=a.x-b.x, dy=a.y-b.y, d=Math.sqrt(dx*dx+dy*dy);
+        if(d<120){
+          const alpha=(1-d/120)*0.25;
+          ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y);
+          ctx.strokeStyle=`rgba(100,160,210,${alpha})`; ctx.lineWidth=0.5; ctx.stroke();
+        }
+      }
+    }
+
+    nodes.forEach(n=>{
+      const dx=m.x-n.x, dy=m.y-n.y, d=Math.sqrt(dx*dx+dy*dy);
+      const prox=Math.max(0,1-d/200);
+      const g=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,n.r*3+prox*15);
+      g.addColorStop(0,`hsla(${n.hue},60%,75%,${n.alpha+prox*0.4})`);
+      g.addColorStop(0.5,`hsla(${n.hue},50%,60%,${(n.alpha+prox*0.4)*0.3})`);
+      g.addColorStop(1,'transparent');
+      ctx.beginPath(); ctx.arc(n.x,n.y,n.r*3+prox*15,0,Math.PI*2);
+      ctx.fillStyle=g; ctx.fill();
+      ctx.beginPath(); ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+      ctx.fillStyle=`hsla(${n.hue},70%,85%,${n.alpha+prox*0.4})`; ctx.fill();
+    });
+  }
+  loops[3]=frame; frame();
+})();
+
+window.switchTab = function(i){
+  document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('active',j===i));
+  document.querySelectorAll('.panel').forEach((p,j)=>p.classList.toggle('active',j===i));
+  active=i;
+  setTimeout(resizeAll,10);
+  const frames=[loops[0],loops[1],loops[2],loops[3]];
+  frames[i]();
+};
+</script>
