@@ -4,20 +4,6 @@ import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
 import { motionEase, PrimaryButton } from "./orb-ui";
 
-function Eyebrow() {
-  return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.84 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.75, ease: motionEase, delay: 0.35 }}
-      className="mx-auto inline-flex items-center gap-2 rounded-full border border-white bg-[#f7f4ed]/80 px-4 py-[10px] text-[12px] font-semibold uppercase leading-none text-[#303545] shadow-[0_0.7px_0.7px_rgba(0,0,0,.08),0_10px_26px_-18px_rgba(0,0,0,.18),inset_0_3px_1px_rgba(255,255,255,.86)] backdrop-blur"
-    >
-      <span className="size-2 rounded-full bg-[#b9f16d] shadow-[0_0_0_4px_rgba(185,241,109,.18)]" />
-      AI Automation For Businesses
-    </motion.div>
-  );
-}
-
 function GravitationalMeshCanvas() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -100,15 +86,15 @@ function GravitationalMeshCanvas() {
       const midX = (a.x + b.x) * 0.5;
       const midY = (a.y + b.y) * 0.5;
       const near = proximity(midX, midY);
-      const alpha = 0.012 + near * near * (0.18 * reveal);
+      const alpha = 0.045 + near * near * (0.32 * reveal);
 
-      if (alpha < 0.016) return;
+      if (alpha < 0.02) return;
 
       ctx.beginPath();
       ctx.moveTo(a.x, a.y);
       ctx.lineTo(b.x, b.y);
-      ctx.strokeStyle = `rgba(118, 120, 124, ${alpha})`;
-      ctx.lineWidth = 0.35 + near * 0.45;
+      ctx.strokeStyle = `rgba(104, 106, 110, ${alpha})`;
+      ctx.lineWidth = 0.5 + near * 0.7;
       ctx.stroke();
     };
 
@@ -126,18 +112,7 @@ function GravitationalMeshCanvas() {
       }
 
       ctx.clearRect(0, 0, width, height);
-      const background = ctx.createLinearGradient(0, 0, width, height);
-      background.addColorStop(0, "#fbfaf7");
-      background.addColorStop(0.5, "#f7f4ed");
-      background.addColorStop(1, "#f1eee6");
-      ctx.fillStyle = background;
-      ctx.fillRect(0, 0, width, height);
-
-      const aura = ctx.createRadialGradient(pointer.x, pointer.y, 0, pointer.x, pointer.y, 360);
-      aura.addColorStop(0, `rgba(255,255,255,${0.46 * reveal})`);
-      aura.addColorStop(0.36, `rgba(224,225,223,${0.18 * reveal})`);
-      aura.addColorStop(1, "rgba(247,244,237,0)");
-      ctx.fillStyle = aura;
+      ctx.fillStyle = "#f5f5f5";
       ctx.fillRect(0, 0, width, height);
 
       points.forEach((point) => {
@@ -174,7 +149,7 @@ function GravitationalMeshCanvas() {
       points.forEach((point) => {
         const near = proximity(point.x, point.y);
         const alpha = near * near * reveal;
-        if (alpha < 0.035) return;
+        if (alpha < 0.018) return;
 
         const nodeGlow = ctx.createRadialGradient(point.x, point.y, 0, point.x, point.y, 14 + alpha * 12);
         nodeGlow.addColorStop(0, `rgba(255,255,255,${0.28 * alpha})`);
@@ -185,20 +160,11 @@ function GravitationalMeshCanvas() {
         ctx.arc(point.x, point.y, 17 + alpha * 18, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.fillStyle = `rgba(104,106,110,${0.12 + alpha * 0.32})`;
+        ctx.fillStyle = `rgba(92,94,98,${0.2 + alpha * 0.5})`;
         ctx.beginPath();
         ctx.arc(point.x, point.y, 0.9 + alpha * 1.25, 0, Math.PI * 2);
         ctx.fill();
       });
-
-      const lens = ctx.createRadialGradient(pointer.x, pointer.y, 0, pointer.x, pointer.y, 130);
-      lens.addColorStop(0, `rgba(215,216,212,${0.11 * reveal})`);
-      lens.addColorStop(0.5, `rgba(255,255,255,${0.12 * reveal})`);
-      lens.addColorStop(1, "rgba(255,255,255,0)");
-      ctx.fillStyle = lens;
-      ctx.beginPath();
-      ctx.arc(pointer.x, pointer.y, 130, 0, Math.PI * 2);
-      ctx.fill();
 
       raf = requestAnimationFrame(draw);
     };
@@ -221,13 +187,10 @@ function GravitationalMeshCanvas() {
 
 export function HeroSection() {
   return (
-    <section id="hero" className="relative mt-[68px] h-[calc(100svh-68px)] overflow-hidden bg-[#f7f4ed] px-4">
+    <section id="hero" className="relative h-svh overflow-hidden bg-[#f5f5f5] px-4 pt-[68px]">
       <GravitationalMeshCanvas />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(255,255,255,.84)_0%,rgba(255,255,255,.64)_24%,rgba(247,244,237,.18)_52%,rgba(247,244,237,.94)_100%)]" />
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-44 bg-gradient-to-b from-[#f7f7f7] to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-44 bg-gradient-to-b from-[#f5f5f5] to-transparent" />
       <div className="relative z-10 mx-auto flex h-full max-w-[1180px] flex-col items-center justify-center text-center">
-        <Eyebrow />
-
         <motion.div
           initial={{ opacity: 0.5, scale: 0.82, y: 12 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -254,7 +217,7 @@ export function HeroSection() {
           transition={{ duration: 0.7, ease: motionEase, delay: 0.78 }}
           className="mt-5"
         >
-          <PrimaryButton />
+          <PrimaryButton>Book a demo</PrimaryButton>
         </motion.div>
       </div>
     </section>

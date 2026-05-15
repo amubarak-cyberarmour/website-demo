@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;800&family=DM+Sans:wght@300;400;500&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#0a0a0a;color:#fff;font-family:'DM Sans',sans-serif;display:flex;flex-direction:column;min-height:100vh}
+  .stub{flex:1;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.07);font-family:'Syne',sans-serif;font-size:11px;letter-spacing:.3em;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,0.05);padding:3rem}
+  footer{background:#0d0d0f;border-top:1px solid rgba(255,255,255,0.06);padding:0 0 2rem}
+  .ft{display:flex;align-items:center;justify-content:space-between;padding:2rem 3rem 0;position:relative;z-index:10}
+  .logo{font-family:'Syne',sans-serif;font-weight:800;font-size:18px;letter-spacing:-.02em}
+  .nav{display:flex;gap:2rem;list-style:none}
+  .nav a{color:rgba(255,255,255,0.35);text-decoration:none;font-size:13px;transition:color .2s}
+  .nav a:hover{color:rgba(255,255,255,.8)}
+  .globe-wrap{position:relative;display:flex;justify-content:center;align-items:center;height:460px}
+  #gc{display:block;cursor:default}
+  .vig{position:absolute;inset:0;background:radial-gradient(ellipse 56% 50% at 50% 50%,transparent 36%,#0d0d0f 100%);pointer-events:none;z-index:2}
+  .offices{display:flex;justify-content:center;padding:0 2rem;position:relative;z-index:10;margin-top:.5rem}
+  .oi{display:flex;flex-direction:column;align-items:center;padding:1rem 2.2rem;cursor:pointer;border:1px solid transparent;border-radius:12px;transition:all .3s;position:relative}
+  .oi::after{content:'';position:absolute;bottom:-1px;left:50%;transform:translateX(-50%) scaleX(0);width:36px;height:2px;background:#64e0a0;border-radius:2px;transition:transform .3s}
+  .oi:hover::after,.oi.active::after{transform:translateX(-50%) scaleX(1)}
+  .oi:hover,.oi.active{background:rgba(255,255,255,.03);border-color:rgba(255,255,255,.07)}
+  .flag{font-size:22px;margin-bottom:5px;transition:transform .3s}
+  .oi:hover .flag,.oi.active .flag{transform:scale(1.2)}
+  .city{font-family:'Syne',sans-serif;font-weight:600;font-size:14px;color:rgba(255,255,255,.8);letter-spacing:.02em;transition:color .3s;white-space:nowrap}
+  .oi:hover .city,.oi.active .city{color:#64e0a0}
+  .cntry{font-size:11px;color:rgba(255,255,255,.28);margin-top:2px;letter-spacing:.05em;text-transform:uppercase}
+  .fb{display:flex;align-items:center;justify-content:space-between;padding:1.5rem 3rem 0;border-top:1px solid rgba(255,255,255,.05);margin-top:1.5rem}
+  .copy{font-size:12px;color:rgba(255,255,255,.22)}
+  .fl{display:flex;gap:1.5rem;list-style:none}
+  .fl a{font-size:12px;color:rgba(255,255,255,.22);text-decoration:none;transition:color .2s}
+  .fl a:hover{color:rgba(255,255,255,.55)}
+  #status{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:12px;color:rgba(255,255,255,.35);letter-spacing:.08em;text-transform:uppercase;font-family:'Syne',sans-serif;z-index:5;text-align:center;pointer-events:none}
+</style>
+</head>
+<body>
+<div class="stub">— website content above —</div>
+<footer>
+  <div class="ft">
+    <div class="logo">ACME CORP</div>
+    <ul class="nav">
+      <li><a href="#">Services</a></li><li><a href="#">About</a></li>
+      <li><a href="#">Careers</a></li><li><a href="#">Contact</a></li>
+    </ul>
+  </div>
+  <div class="globe-wrap">
+    <canvas id="gc" width="460" height="460"></canvas>
+    <div class="vig"></div>
+    <div id="status">Loading world map…</div>
+  </div>
+  <div class="offices">
+    <div class="oi" data-i="0"><div class="flag">🇵🇰</div><div class="city">Islamabad</div><div class="cntry">Pakistan</div></div>
+    <div class="oi" data-i="1"><div class="flag">🇦🇪</div><div class="city">Ajman</div><div class="cntry">UAE</div></div>
+    <div class="oi" data-i="2"><div class="flag">🇬🇧</div><div class="city">London</div><div class="cntry">United Kingdom</div></div>
+    <div class="oi" data-i="3"><div class="flag">🇭🇰</div><div class="city">Hong Kong</div><div class="cntry">SAR China</div></div>
+  </div>
+  <div class="fb">
+    <div class="copy">© 2025 Acme Corp. All rights reserved.</div>
+    <ul class="fl"><li><a href="#">Privacy</a></li><li><a href="#">Terms</a></li><li><a href="#">Cookies</a></li></ul>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+<script>
+const canvas = document.getElementById('gc');
+const ctx = canvas.getContext('2d');
+const W = canvas.width, H = canvas.height;
+const cx = W/2, cy = H/2, R = 200;
+
+const offices = [
+  {city:'Islamabad', country:'Pakistan',      lat:33.7,  lon:73.1 },
+  {city:'Ajman',     country:'UAE',            lat:25.4,  lon:55.4 },
+  {city:'London',    country:'United Kingdom', lat:51.5,  lon:-0.1 },
+  {city:'Hong Kong', country:'SAR China',      lat:22.3,  lon:114.2},
+];
+
+let rotLon = -20, rotLat = -15;
+let targetLon = rotLon, targetLat = rotLat;
+let easeStartLon = rotLon, easeStartLat = rotLat;
+let easeT = 1;
+let isHovering = false;
+let activeOffice = -1;
+let pulse = 0;
+let worldData = null;
+let countries = [], land = null;
+
+const statusEl = document.getElementById('status');
+
+const projection = () => d3.geoOrthographic()
+  .scale(R)
+  .translate([cx, cy])
+  .clipAngle(90)
+  .rotate([rotLon, rotLat, 0]);
+
+const path = d3.geoPath().context(ctx);
+
+function drawFrame() {
+  ctx.clearRect(0, 0, W, H);
+  const proj = projection();
+  path.projection(proj);
+
+  const sphere = {type:'Sphere'};
+
+  const bgGrad = ctx.createRadialGradient(cx-55, cy-55, 15, cx, cy, R);
+  bgGrad.addColorStop(0, '#1c2035');
+  bgGrad.addColorStop(0.6, '#0d1020');
+  bgGrad.addColorStop(1, '#070810');
+  ctx.beginPath(); path(sphere);
+  ctx.fillStyle = bgGrad; ctx.fill();
+
+  ctx.beginPath(); path({type:'Graticule', ...d3.geoGraticule()()});
+  ctx.strokeStyle = 'rgba(100,140,255,0.07)';
+  ctx.lineWidth = 0.5; ctx.stroke();
+
+  if (worldData) {
+    worldData.forEach((feature, fi) => {
+      const isActiveCountry = activeOffice >= 0 && feature.properties && (
+        (activeOffice === 0 && feature.properties.name === 'Pakistan') ||
+        (activeOffice === 1 && (feature.properties.name === 'United Arab Emirates')) ||
+        (activeOffice === 2 && feature.properties.name === 'United Kingdom') ||
+        (activeOffice === 3 && feature.properties.name === 'China')
+      );
+
+      ctx.beginPath(); path(feature);
+      if (isActiveCountry) {
+        ctx.fillStyle = 'rgba(100,224,160,0.55)';
+        ctx.strokeStyle = 'rgba(100,224,160,0.9)';
+        ctx.lineWidth = 1.2;
+      } else {
+        ctx.fillStyle = 'rgba(45,65,90,0.85)';
+        ctx.strokeStyle = 'rgba(80,110,150,0.3)';
+        ctx.lineWidth = 0.5;
+      }
+      ctx.fill(); ctx.stroke();
+    });
+  }
+
+  ctx.beginPath(); path(sphere);
+  ctx.strokeStyle = 'rgba(100,160,255,0.18)';
+  ctx.lineWidth = 1; ctx.stroke();
+
+  const atmo = ctx.createRadialGradient(cx, cy, R * 0.9, cx, cy, R * 1.15);
+  atmo.addColorStop(0, 'rgba(60,120,255,0)');
+  atmo.addColorStop(0.5, 'rgba(60,120,255,0.09)');
+  atmo.addColorStop(1, 'rgba(60,120,255,0)');
+  ctx.beginPath();
+  ctx.arc(cx, cy, R * 1.15, 0, Math.PI*2);
+  ctx.fillStyle = atmo; ctx.fill();
+
+  pulse += 0.055;
+  for (let i = 0; i < offices.length; i++) {
+    const o = offices[i];
+    const proj2 = projection();
+    const [px, py] = proj2([o.lon, o.lat]);
+    if (!px || !py) continue;
+
+    const geo = d3.geoDistance([o.lon, o.lat], [-rotLon, -rotLat]);
+    if (geo > Math.PI / 2) continue;
+
+    const isAct = activeOffice === i;
+    const pr = isAct ? 5.5 : 3.5;
+
+    if (isAct) {
+      const pulseSz = 13 + Math.sin(pulse * 2) * 4;
+      const pg = ctx.createRadialGradient(px, py, 0, px, py, pulseSz);
+      pg.addColorStop(0, 'rgba(100,224,160,0.4)');
+      pg.addColorStop(1, 'rgba(100,224,160,0)');
+      ctx.beginPath(); ctx.arc(px, py, pulseSz, 0, Math.PI*2);
+      ctx.fillStyle = pg; ctx.fill();
+
+      const ring = 9 + Math.sin(pulse * 2 + 1) * 3;
+      ctx.beginPath(); ctx.arc(px, py, ring, 0, Math.PI*2);
+      ctx.strokeStyle = 'rgba(100,224,160,0.3)';
+      ctx.lineWidth = 1.5; ctx.stroke();
+    }
+
+    ctx.beginPath(); ctx.arc(px, py, pr, 0, Math.PI*2);
+    ctx.fillStyle = isAct ? '#64e0a0' : 'rgba(255,255,255,0.9)';
+    ctx.fill();
+    ctx.strokeStyle = isAct ? 'white' : 'rgba(255,255,255,0.4)';
+    ctx.lineWidth = 1.5; ctx.stroke();
+  }
+
+  const shine = ctx.createRadialGradient(cx-R*.4, cy-R*.4, 0, cx-R*.2, cy-R*.2, R*.7);
+  shine.addColorStop(0, 'rgba(255,255,255,0.07)');
+  shine.addColorStop(1, 'rgba(255,255,255,0)');
+  ctx.beginPath(); path(sphere);
+  ctx.fillStyle = shine; ctx.fill();
+}
+
+function easeInOut(t) { return t < .5 ? 2*t*t : -1+(4-2*t)*t; }
+function normAngle(a) { while(a>180) a-=360; while(a<-180) a+=360; return a; }
+
+function loop() {
+  if (!isHovering) {
+    rotLon -= 0.18;
+  } else if (easeT < 1) {
+    easeT = Math.min(1, easeT + 0.022);
+    const t = easeInOut(easeT);
+    rotLon = easeStartLon + normAngle(targetLon - easeStartLon) * t;
+    rotLat = easeStartLat + normAngle(targetLat - easeStartLat) * t;
+  }
+  drawFrame();
+  requestAnimationFrame(loop);
+}
+
+function targetForOffice(i) {
+  const o = offices[i];
+  return { lon: -o.lon + 5, lat: -o.lat * 0.6 };
+}
+
+document.querySelectorAll('.oi').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    const i = parseInt(el.dataset.i);
+    isHovering = true; activeOffice = i;
+    document.querySelectorAll('.oi').forEach(e => e.classList.remove('active'));
+    el.classList.add('active');
+    const t = targetForOffice(i);
+    targetLon = t.lon; targetLat = t.lat;
+    easeStartLon = rotLon; easeStartLat = rotLat;
+    easeT = 0;
+  });
+  el.addEventListener('mouseleave', () => {
+    isHovering = false; activeOffice = -1;
+    el.classList.remove('active');
+  });
+});
+
+fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
+  .then(r => r.json())
+  .then(topo => {
+    const feats = topojson.feature(topo, topo.objects.countries).features;
+    const nameMap = {
+      4:'Afghanistan',8:'Albania',12:'Algeria',24:'Angola',32:'Argentina',36:'Australia',
+      40:'Austria',50:'Bangladesh',56:'Belgium',64:'Bhutan',68:'Bolivia',76:'Brazil',
+      100:'Bulgaria',116:'Cambodia',120:'Cameroon',124:'Canada',144:'Sri Lanka',152:'Chile',
+      156:'China',170:'Colombia',180:'DRC',188:'Costa Rica',192:'Cuba',203:'Czech Republic',
+      208:'Denmark',218:'Ecuador',818:'Egypt',231:'Ethiopia',246:'Finland',250:'France',
+      276:'Germany',288:'Ghana',300:'Greece',320:'Guatemala',332:'Haiti',340:'Honduras',
+      348:'Hungary',356:'India',360:'Indonesia',364:'Iran',368:'Iraq',372:'Ireland',
+      376:'Israel',380:'Italy',388:'Jamaica',392:'Japan',400:'Jordan',398:'Kazakhstan',
+      404:'Kenya',410:'South Korea',414:'Kuwait',418:'Laos',422:'Lebanon',434:'Libya',
+      484:'Mexico',504:'Morocco',508:'Mozambique',524:'Nepal',528:'Netherlands',
+      558:'Nicaragua',566:'Nigeria',578:'Norway',586:'Pakistan',591:'Panama',
+      604:'Peru',608:'Philippines',616:'Poland',620:'Portugal',642:'Romania',
+      643:'Russia',682:'Saudi Arabia',686:'Senegal',694:'Sierra Leone',703:'Slovakia',
+      706:'Somalia',710:'South Africa',724:'Spain',729:'Sudan',752:'Sweden',756:'Switzerland',
+      760:'Syria',764:'Thailand',788:'Tunisia',792:'Turkey',800:'Uganda',804:'Ukraine',
+      784:'United Arab Emirates',826:'United Kingdom',840:'United States of America',
+      858:'Uruguay',860:'Uzbekistan',704:'Vietnam',887:'Yemen',894:'Zambia',716:'Zimbabwe',
+    };
+    worldData = feats.map(f => ({
+      ...f,
+      properties: { ...f.properties, name: nameMap[+f.id] || f.properties.name || '' }
+    }));
+    statusEl.style.display = 'none';
+    loop();
+  })
+  .catch(() => {
+    statusEl.textContent = 'Failed to load map data.';
+    loop();
+  });
+</script>
+</body>
+</html>

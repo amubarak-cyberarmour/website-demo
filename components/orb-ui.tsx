@@ -33,9 +33,9 @@ export function PrimaryButton({ href = "/#pricing", children = "Get Started" }: 
       whileHover={{ y: -2 }}
       whileTap={{ scale: 0.985 }}
       transition={{ duration: 0.2, ease: motionEase }}
-      className="inline-flex h-12 items-center justify-center rounded-[10px] bg-[#0e1229] px-5 text-[14px] font-semibold text-white shadow-[0_0.6px_1.08px_-1.25px_rgba(61,61,61,.72),0_2.28px_4.12px_-2.5px_rgba(61,61,61,.64),0_10px_18px_-3.75px_rgba(61,61,61,.25),0_30px_30px_-12px_rgba(0,0,0,.28)]"
+      className="inline-flex h-12 items-center justify-center rounded-[10px] bg-[#0e1229] px-5 text-[15px] font-normal leading-none !text-[#f7f4ed] shadow-[0_0.6px_1.08px_-1.25px_rgba(61,61,61,.72),0_2.28px_4.12px_-2.5px_rgba(61,61,61,.64),0_10px_18px_-3.75px_rgba(61,61,61,.25),0_30px_30px_-12px_rgba(0,0,0,.28)]"
     >
-      {children}
+      <span className="relative z-10 leading-none !text-[#f7f4ed]">{children}</span>
     </motion.a>
   );
 }

@@ -20,9 +20,7 @@ html {
 
 body {
   margin: 0;
-  background:
-    radial-gradient(circle at 50% -10%, rgba(255, 255, 255, 0.95), transparent 34rem),
-    linear-gradient(180deg, #f8f8f8 0%, var(--paper) 100%);
+  background: var(--paper);
   color: var(--ink);
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
@@ -47,9 +45,7 @@ a {
 }
 
 .hero-shell {
-  background:
-    radial-gradient(circle at 50% -8%, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0) 35rem),
-    linear-gradient(180deg, #f8f8f8 0%, #f5f5f5 100%);
+  background: #f5f5f5;
 }
 
 .orb-title-gradient {
@@ -215,4 +211,183 @@ a {
 @keyframes float-b {
   0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
   50% { transform: translate3d(-12px, 14px, 0) rotate(-5deg); }
+}
+
+.customers-orbit {
+  --rotate-speed: 42;
+  --count: 6;
+  --orbit-easing: cubic-bezier(0, 0.37, 1, 0.63);
+  position: relative;
+  width: min(100%, 90vh);
+  max-width: min(1100px, 92vh);
+  max-height: 90vh;
+  margin: 0 auto;
+  aspect-ratio: 1 / 1;
+}
+
+.customers-orbit-crop {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, transparent 50%, #000 50%, #000 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, transparent 50%, #000 50%, #000 100%);
+}
+
+.customers-orbit-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.customers-orbit-list:hover * {
+  animation-play-state: paused;
+}
+
+.customers-orbit-list li {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  transform: translateY(-50%);
+  animation: customers-rotate-cw calc(var(--rotate-speed) * 1s) var(--orbit-easing) infinite;
+  animation-delay: calc((var(--rotate-speed) / var(--count)) * var(--item-index) * -1s);
+}
+
+.customers-orbit-card {
+  width: 296px;
+  height: 118px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 12px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.86);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(245, 245, 245, 0.9));
+  color: #4f556f;
+  box-shadow:
+    0 8px 20px rgba(14, 18, 41, 0.1),
+    0 20px 36px rgba(14, 18, 41, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  animation: customers-rotate-ccw calc(var(--rotate-speed) * 1s) var(--orbit-easing) infinite;
+  animation-delay: calc((var(--rotate-speed) / var(--count)) * var(--item-index) * -1s);
+}
+
+.customers-orbit-name {
+  display: block;
+  color: var(--ink);
+  font-size: clamp(15px, 1.35vw, 17px);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.customers-orbit-copy {
+  display: -webkit-box;
+  color: rgba(14, 18, 41, 0.74);
+  font-size: clamp(11px, 1.02vw, 13px);
+  line-height: 1.4;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.customers-orbit-circle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+}
+
+.customers-orbit-circle-center {
+  width: min(26%, 186px);
+  aspect-ratio: 1 / 1;
+  z-index: 2;
+  background: radial-gradient(circle at 30% 28%, #ffffff 0%, #f2f3f8 70%, #e8eaf3 100%);
+  box-shadow: 0 20px 44px rgba(14, 18, 41, 0.16), 0 34px 64px rgba(14, 18, 41, 0.12);
+}
+
+.customers-orbit-circle-second {
+  width: 36%;
+  aspect-ratio: 1 / 1;
+  background: rgba(50, 61, 104, 0.12);
+}
+
+.customers-orbit-circle-last {
+  width: 60%;
+  aspect-ratio: 1 / 1;
+  background: rgba(50, 61, 104, 0.08);
+}
+
+.customers-orbit-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 50%;
+  animation: customers-pulse-glow 5s linear infinite alternate;
+  background-position: 100% 50%;
+  background-repeat: no-repeat;
+  background-image: radial-gradient(100% 50% at 100% 50%, rgba(14, 18, 41, 0.3) 0%, rgba(14, 18, 41, 0.23) 35%, rgba(50, 61, 104, 0.14) 62%, rgba(50, 61, 104, 0) 100%);
+}
+
+.customers-orbit-mask::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  width: 1px;
+  height: 100%;
+  background-image: linear-gradient(180deg, rgba(14, 18, 41, 0) 0%, rgba(14, 18, 41, 0.75) 50%, rgba(14, 18, 41, 0) 100%);
+}
+
+@keyframes customers-rotate-cw {
+  from {
+    transform: translate3d(0, -50%, 0) rotate(-45deg);
+  }
+  to {
+    transform: translate3d(0, -50%, 0) rotate(-315deg);
+  }
+}
+
+@keyframes customers-rotate-ccw {
+  from {
+    transform: rotate(45deg);
+  }
+  to {
+    transform: rotate(315deg);
+  }
+}
+
+@keyframes customers-pulse-glow {
+  from {
+    background-size: 60%;
+  }
+  to {
+    background-size: 100%;
+  }
+}
+
+@media (max-width: 960px) {
+  .customers-orbit {
+    max-width: 860px;
+  }
+}
+
+@media (max-width: 640px) {
+  .customers-orbit {
+    aspect-ratio: 1 / 1.08;
+  }
+
+  .customers-orbit-card {
+    width: 268px;
+    height: 114px;
+  }
+
+  .customers-orbit-copy {
+    font-size: 11px;
+    line-height: 1.35;
+  }
 }

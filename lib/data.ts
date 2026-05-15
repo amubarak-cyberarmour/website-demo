@@ -1,7 +1,6 @@
 export const navItems = [
-  { label: "Features", href: "/#features" },
-  { label: "Pricing", href: "/#pricing" },
   { label: "Services", href: "/#services" },
+  { label: "Products", href: "/#products" },
   { label: "Updates", href: "/changelog" },
   { label: "Contact", href: "/contact" },
 ];
@@ -40,6 +39,33 @@ export const services = [
   "Custom Integrations",
   "Intelligent Lead Routing",
   "Process Optimization",
+];
+
+export const products = [
+  {
+    name: "AI Sales Assistant",
+    tag: "Revenue",
+    text: "A guided assistant for qualifying leads, preparing follow-ups, and keeping sales handoffs consistent.",
+    features: ["Lead summaries", "Follow-up drafts", "CRM-ready notes"],
+  },
+  {
+    name: "Workflow Automation Hub",
+    tag: "Operations",
+    text: "A central command layer for routing repetitive tasks, approvals, and internal process updates.",
+    features: ["Task routing", "Approval flows", "Status alerts"],
+  },
+  {
+    name: "Analytics Copilot",
+    tag: "Insights",
+    text: "A reporting companion that turns operational data into plain-language trends, alerts, and next actions.",
+    features: ["Live insights", "Forecast prompts", "Dashboard briefs"],
+  },
+  {
+    name: "Custom LLM Portal",
+    tag: "Support",
+    text: "A secure branded workspace for team assistants, knowledge retrieval, and customer-facing AI workflows.",
+    features: ["Knowledge search", "Role-based access", "Custom workflows"],
+  },
 ];
 
 export const process = [
