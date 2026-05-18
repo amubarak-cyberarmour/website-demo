@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/Navbar";
 import { caseStudies } from "@/lib/case-studies";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 export function generateStaticParams() {
@@ -19,9 +20,9 @@ export default async function CaseStudyDetailPage({ params }: { params: Promise<
       <Navbar />
       <main className="min-h-screen bg-[#f5f5f5] px-4 pb-24 pt-36 text-[#0e1229] md:px-8">
         <article className="mx-auto max-w-[1120px]">
-          <a href="/case-studies" className="text-sm font-semibold text-[#555968]">
+          <Link href="/case-studies" className="text-sm font-semibold text-[#555968]">
             Back to case studies
-          </a>
+          </Link>
 
           <div className="mt-8 overflow-hidden rounded-[8px] border border-white/80 bg-[#f5f5f5] shadow-[inset_0_3px_1px_rgba(255,255,255,.8),0_18px_50px_rgba(14,18,41,.08)]">
             <div className="min-h-[320px]" style={{ backgroundColor: study.color }} />

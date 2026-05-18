@@ -217,7 +217,7 @@ export function HeroSection() {
           transition={{ duration: 0.7, ease: motionEase, delay: 0.78 }}
           className="mt-5"
         >
-          <PrimaryButton>Book a demo</PrimaryButton>
+          <PrimaryButton href="/contact">Book a demo</PrimaryButton>
         </motion.div>
       </div>
     </section>

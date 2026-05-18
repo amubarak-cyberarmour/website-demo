@@ -1,4 +1,55 @@
+"use client";
+
+import { FormEvent, useState } from "react";
+
 export default function Footer() {
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [message, setMessage] = useState("");
+
+  const onNewsletterSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const value = email.trim();
+    if (!value) {
+      setStatus("error");
+      setMessage("Please enter your email.");
+      return;
+    }
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(value)) {
+      setStatus("error");
+      setMessage("Please enter a valid email.");
+      return;
+    }
+
+    setStatus("loading");
+    setMessage("");
+
+    try {
+      const response = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: value }),
+      });
+
+      const data = (await response.json()) as { message?: string; error?: string };
+      if (!response.ok) {
+        setStatus("error");
+        setMessage(data.error || "Unable to subscribe right now.");
+        return;
+      }
+
+      setStatus("success");
+      setMessage(data.message || "Subscribed successfully.");
+      setEmail("");
+    } catch {
+      setStatus("error");
+      setMessage("Unable to subscribe right now.");
+    }
+  };
+
   return (
     <footer
       id="contact"
@@ -46,14 +97,36 @@ export default function Footer() {
           <h3 className="mb-4 font-semibold text-[var(--ink)]">Newsletter</h3>
           <p className="mb-4 text-sm">Subscribe for updates and insights</p>
 
-          <div className="flex items-center overflow-hidden rounded-lg border border-[var(--line)] bg-white/60">
-            <input
-              type="email"
-              placeholder="Your email"
-              className="flex-1 bg-transparent px-4 py-2 text-sm text-[var(--ink)] outline-none placeholder:text-[var(--muted)]"
-            />
-            <button className="bg-[#0e1229] px-4 py-2 text-[#f7f4ed] transition-colors hover:bg-[#0e1229]">→</button>
-          </div>
+          <form onSubmit={onNewsletterSubmit}>
+            <div className="flex items-center overflow-hidden rounded-lg border border-[var(--line)] bg-white/60">
+              <input
+                type="email"
+                placeholder="Your email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                className="flex-1 bg-transparent px-4 py-2 text-sm text-[var(--ink)] outline-none placeholder:text-[var(--muted)]"
+                aria-label="Newsletter email address"
+                autoComplete="email"
+              />
+              <button
+                type="submit"
+                disabled={status === "loading"}
+                className="bg-[#0e1229] px-4 py-2 text-[#f7f4ed] transition-colors hover:bg-[#0e1229] disabled:cursor-not-allowed disabled:opacity-70"
+                aria-label="Submit newsletter subscription"
+              >
+                {status === "loading" ? "..." : "→"}
+              </button>
+            </div>
+            {message ? (
+              <p
+                className={`mt-2 text-xs ${status === "success" ? "text-emerald-700" : "text-red-700"}`}
+                role="status"
+                aria-live="polite"
+              >
+                {message}
+              </p>
+            ) : null}
+          </form>
         </div>
       </div>
 

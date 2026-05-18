@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { caseStudies } from "@/lib/case-studies";
 import { motionEase } from "./orb-ui";
+import Link from "next/link";
 
 function StudyMark({ type, color }: { type: string; color: string }) {
   if (type === "stack") {
@@ -85,20 +86,22 @@ function CaseStudyCard({ study, index }: { study: (typeof caseStudies)[number]; 
   );
 
   return (
-    <motion.a
+    <Link
       href={`/case-studies/${study.slug}`}
-      initial={{ opacity: 0, y: 42 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.7, delay: index * 0.06, ease: motionEase }}
       className="sticky top-[88px] block overflow-hidden rounded-[8px] border border-white/85 bg-[#f5f5f5] shadow-[inset_0_3px_1px_rgba(255,255,255,.8),0_24px_70px_rgba(14,18,41,.16)]"
       style={{ zIndex: index + 1, marginTop: index === 0 ? 0 : -112 }}
     >
-      <article className="grid gap-0 lg:grid-cols-2">
+      <motion.article
+        initial={{ opacity: 0, y: 42 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.7, delay: index * 0.06, ease: motionEase }}
+        className="grid gap-0 lg:grid-cols-2"
+      >
         {study.imageFirst ? imagePanel : contentPanel}
         {study.imageFirst ? contentPanel : imagePanel}
-      </article>
-    </motion.a>
+      </motion.article>
+    </Link>
   );
 }
 
@@ -122,14 +125,17 @@ export function CaseStudiesSection() {
           ))}
         </div>
 
-        <motion.a
+        <Link
           href="/case-studies"
-          initial={{ opacity: 0, y: 34 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.45 }}
-          transition={{ duration: 0.65, ease: motionEase }}
-          className="relative z-10 mx-auto flex min-h-[132px] max-w-[126rem] items-center gap-6 overflow-hidden rounded-[8px] border border-white/85 bg-[#f5f5f5] p-3 text-[#0e1229] shadow-[inset_0_3px_1px_rgba(255,255,255,.8),0_24px_70px_rgba(14,18,41,.16)] md:min-h-[168px] md:gap-8 md:p-4"
+          className="relative z-10 mx-auto block min-h-[132px] max-w-[126rem] overflow-hidden rounded-[8px] border border-white/85 bg-[#f5f5f5] p-3 text-[#0e1229] shadow-[inset_0_3px_1px_rgba(255,255,255,.8),0_24px_70px_rgba(14,18,41,.16)] md:min-h-[168px] md:p-4"
         >
+          <motion.div
+            initial={{ opacity: 0, y: 34 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.45 }}
+            transition={{ duration: 0.65, ease: motionEase }}
+            className="flex items-center gap-6 md:gap-8"
+          >
           <div className="hidden h-[108px] w-[124px] shrink-0 items-center justify-center rounded-[8px] bg-[linear-gradient(135deg,#323d68,#0e1229)] md:flex md:h-[136px] md:w-[156px]">
             <StudyMark type="bars" color="#323d68" />
           </div>
@@ -142,7 +148,8 @@ export function CaseStudiesSection() {
           <span className="grid size-16 shrink-0 place-items-center rounded-full bg-[#0e1229] text-white md:size-22">
             <ArrowRight size={34} strokeWidth={1.6} />
           </span>
-        </motion.a>
+          </motion.div>
+        </Link>
       </div>
     </section>
   );

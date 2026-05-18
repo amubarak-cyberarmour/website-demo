@@ -8,10 +8,12 @@ import { ServicesSection } from "./ServicesSection";
 import Globe_Footer from "./Globe_Footer";
 import { AboutUsSection } from "./AboutUsSection";
 import { JoinUsSection } from "./JoinUsSection";
+import { BackForwardRestoreFix } from "./BackForwardRestoreFix";
 
 export function HomePage() {
   return (
     <>
+      <BackForwardRestoreFix />
       <Navbar />
       <main>
         <HeroSection />

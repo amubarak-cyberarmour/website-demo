@@ -11,6 +11,8 @@ const navbarItems = [
   { label: "Products", href: "/#products" },
   { label: "Case Studies", href: "/#case-studies" },
   { label: "Customers", href: "/#customers" },
+  { label: "About Us", href: "/#about" },
+  { label: "Join Us", href: "/#join" },
 ];
 
 function Logo() {

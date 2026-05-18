@@ -127,15 +127,38 @@ function ChatMessage({ message, isUser, index }: { message: string; isUser: bool
 }
 
 export default function Products() {
+  const sectionRef = useRef<HTMLElement | null>(null);
   const whisperCardRefs = useRef<(HTMLElement | null)[]>([]);
   const [activeWhisperScrollCard, setActiveWhisperScrollCard] = useState(0);
   const [chatMessages, setChatMessages] = useState<{ text: string; isUser: boolean }[]>([]);
   const [inputValue, setInputValue] = useState("");
+  const [isSectionVisible, setIsSectionVisible] = useState(false);
 
   useEffect(() => {
+    const node = sectionRef.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsSectionVisible(entry.isIntersecting);
+      },
+      { threshold: 0.15, rootMargin: "220px 0px 220px 0px" }
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!isSectionVisible) {
+      setInputValue("");
+      setChatMessages([]);
+      return;
+    }
+
     const timers: number[] = [];
     let cancelled = false;
-    const typeSpeed = 90;
+    const typeSpeed = 120;
     const sendPause = 900;
     const responseDelay = 1300;
     const betweenPairsDelay = 1800;
@@ -197,7 +220,7 @@ export default function Products() {
       setInputValue("");
       timers.forEach((timer) => window.clearTimeout(timer));
     };
-  }, []);
+  }, [isSectionVisible]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -223,7 +246,7 @@ export default function Products() {
   }, []);
 
   return (
-    <section id="products" className="scroll-mt-20 bg-[#f5f5f5] pb-28 pt-12 text-[#0e1229] md:pt-14 lg:pt-16">
+    <section ref={sectionRef} id="products" className="scroll-mt-20 bg-[#f5f5f5] pb-28 pt-12 text-[#0e1229] md:pt-14 lg:pt-16">
       <div className="mx-auto max-w-[92rem] px-6 sm:px-10 lg:px-12">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -435,7 +458,7 @@ export default function Products() {
           className="mt-20 border-t border-[#0e1229]/10 pt-8 text-center"
         >
           <p className="mb-6 text-sm font-semibold uppercase tracking-[0.35em] text-[#f7f4ed]">Ready to get started</p>
-          <PrimaryButton>Book a demo</PrimaryButton>
+          <PrimaryButton href="/contact">Book a demo</PrimaryButton>
         </motion.div>
       </div>
 
