@@ -2,7 +2,7 @@ import Footer from "@/components/Footer";
 import Globe_With_Container_ContactUs_Page from "@/components/Globe_With_Container_ContactUs_Page";
 import { Navbar } from "@/components/Navbar";
 import ContactForm from "@/components/ContactForm";
-import { Phone } from "lucide-react";
+import { Mail, MailOpen } from "lucide-react";
 
 export default function ContactPage() {
   return (
@@ -13,7 +13,7 @@ export default function ContactPage() {
           <div className="mb-5 md:mb-6">
             <div className="mb-5 flex justify-center">
               <div className="inline-flex items-center gap-3 rounded-full border border-white/90 bg-[#efefef] px-6 py-2.5 text-[15px] font-semibold uppercase tracking-[0.04em] text-[#0e1229] shadow-[inset_0_2px_0_rgba(255,255,255,.8),0_8px_20px_rgba(14,18,41,.12)]">
-                <Phone className="size-4 text-[#0e1229]" strokeWidth={2.2} aria-hidden="true" />
+                <Mail className="size-4 text-[#0e1229]" strokeWidth={2.2} aria-hidden="true" />
                 Contact
               </div>
             </div>
@@ -36,13 +36,11 @@ export default function ContactPage() {
 
                 <div className="inline-flex items-center rounded-full border border-white/90 bg-[#f5f5f5] p-1.5 shadow-[inset_0_2px_0_rgba(255,255,255,.8),0_8px_20px_rgba(14,18,41,.08)]">
                   <a
-                    href="tel:+923001112233"
-                    className="group inline-flex items-center rounded-full border border-white/95 bg-[#f0f0f0] px-3 py-2 text-[16px] font-semibold text-[#323d68] shadow-[inset_0_1px_0_rgba(255,255,255,.9),0_6px_14px_rgba(14,18,41,.12)] transition hover:text-[#0e1229] md:text-[17px]"
+                    href="mailto:info@cyberarmour.pk"
+                    className="group inline-flex size-10 items-center justify-center rounded-full border border-white/95 bg-[#f0f0f0] text-[16px] font-semibold text-[#323d68] shadow-[inset_0_1px_0_rgba(255,255,255,.9),0_6px_14px_rgba(14,18,41,.12)] transition hover:text-[#0e1229] md:size-11 md:text-[17px]"
                   >
-                    <Phone className="size-4" />
-                    <span className="ml-0 max-w-0 overflow-hidden whitespace-nowrap opacity-0 transition-all duration-300 ease-out group-hover:ml-2 group-hover:max-w-[160px] group-hover:opacity-100">
-                      +92 300 111 2233
-                    </span>
+                    <Mail className="size-4 group-hover:hidden" />
+                    <MailOpen className="hidden size-4 group-hover:block" />
                   </a>
                 </div>
               </article>

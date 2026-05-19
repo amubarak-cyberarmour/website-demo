@@ -120,7 +120,7 @@ export function CaseStudiesSection() {
         </motion.h2>
 
         <div className="grid gap-[12vh] pb-[4vh]">
-          {caseStudies.map((study, index) => (
+          {caseStudies.slice(0, 3).map((study, index) => (
             <CaseStudyCard key={study.slug} study={study} index={index} />
           ))}
         </div>

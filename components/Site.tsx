@@ -5,7 +5,7 @@ import Products from "./Products";
 import { CaseStudiesSection } from "./CaseStudiesSection";
 import { CustomersSection } from "./CustomersSection";
 import { ServicesSection } from "./ServicesSection";
-import Globe_Footer from "./Globe_Footer";
+import Footer_With_Map from "./Footer_With_Map";
 import { AboutUsSection } from "./AboutUsSection";
 import { JoinUsSection } from "./JoinUsSection";
 import { BackForwardRestoreFix } from "./BackForwardRestoreFix";
@@ -24,7 +24,7 @@ export function HomePage() {
         <AboutUsSection />
         <JoinUsSection />
       </main>
-      <Globe_Footer />
+      <Footer_With_Map />
     </>
   );
 }
@@ -52,7 +52,7 @@ export function SimplePage({
           {children}
         </div>
       </main>
-      <Globe_Footer />
+      <Footer_With_Map />
     </>
   );
 }
