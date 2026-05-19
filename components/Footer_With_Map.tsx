@@ -25,7 +25,7 @@ function Pin({ x, y, label, onEnter, onLeave }: {
   onEnter: () => void; onLeave: () => void;
 }) {
   const [hovered, setHovered] = useState(false);
-  const ph = 20, pw = 12;
+  const ph = 25;
 
   return (
     <g
@@ -35,23 +35,23 @@ function Pin({ x, y, label, onEnter, onLeave }: {
       onMouseLeave={() => { setHovered(false); onLeave(); }}
     >
       {/* hit area */}
-      <circle cx={x} cy={y - ph / 2} r={18} fill="transparent" />
+      <circle cx={x} cy={y - ph / 2} r={20} fill="transparent" />
       {/* glow */}
-      <circle cx={x} cy={y} r={14} fill="#ef4444" opacity={hovered ? 0.18 : 0.1}
+      <circle cx={x} cy={y} r={16} fill="#8fb4ff" opacity={hovered ? 0.26 : 0.14}
         style={{ transition: "opacity 0.25s" }} />
-      {/* pin body */}
+      {/* pin icon */}
       <path
         d={`M ${x} ${y}
-            C ${x - pw} ${y - 3}, ${x - pw} ${y - ph + 5}, ${x} ${y - ph}
-            C ${x + pw} ${y - ph + 5}, ${x + pw} ${y - 3}, ${x} ${y} Z`}
-        fill="#ef4444"
-        stroke="#fff"
-        strokeWidth={0.9}
+            C ${x - 8.4} ${y - 9.2}, ${x - 9.1} ${y - 17.2}, ${x} ${y - ph}
+            C ${x + 9.1} ${y - 17.2}, ${x + 8.4} ${y - 9.2}, ${x} ${y} Z`}
+        fill="#8fb4ff"
+        stroke="#d6e4ff"
+        strokeWidth={1.15}
         opacity={hovered ? 1 : 0.85}
         style={{ transition: "opacity 0.2s" }}
       />
       {/* inner dot */}
-      <circle cx={x} cy={y - ph + 6} r={2.8} fill="#fff" />
+      <circle cx={x} cy={y - ph + 8.2} r={3.1} fill="#1f2023" opacity={0.95} />
       {/* tooltip */}
       {hovered && (
         <g>
@@ -151,17 +151,20 @@ export default function Footer_With_Map() {
             .filter((loc) => !hiddenMapRegions.has(loc.id))
             .map((loc) => {
               const isHighlight = highlightCountries.has(loc.id);
-              const isHovered = hoveredCountry === loc.id;
+              const isHovered =
+                hoveredCountry === loc.id ||
+                (hoveredCountry === "hk" && loc.id === "cn");
+              const shouldFill = (isHighlight || loc.id === "cn") && isHovered;
               return (
                 <path
                   key={loc.id}
                   d={loc.path}
-                  fill={isHighlight && isHovered ? "#ef4444" : "#8f97a5"}
+                  fill={shouldFill ? "#ef4444" : "#8f97a5"}
                   stroke="#5f6673"
                   strokeWidth={0.45}
                   style={{
-                    transition: isHighlight ? "fill 0.35s ease" : undefined,
-                    opacity: isHighlight && isHovered ? 0.55 : 1,
+                    transition: isHighlight || loc.id === "cn" ? "fill 0.35s ease" : undefined,
+                    opacity: shouldFill ? 0.55 : 1,
                   }}
                 />
               );
@@ -259,21 +262,37 @@ export default function Footer_With_Map() {
           <div className="my-7 border-t border-white/10" />
 
           <div className="grid grid-cols-2 gap-5 text-start md:grid-cols-4">
-            <div>
-              <p className="font-semibold text-white">Pakistan</p>
-              <p className="text-sm text-[#d4d7df]">Islamabad</p>
+            <div
+              onMouseEnter={() => setHoveredCountry("pk")}
+              onMouseLeave={() => setHoveredCountry(null)}
+              className="group cursor-pointer"
+            >
+              <p className="font-semibold text-white transition-colors group-hover:text-[#8fb4ff]">Pakistan</p>
+              <p className="text-sm text-[#d4d7df] transition-colors group-hover:text-[#8fb4ff]">Islamabad</p>
             </div>
-            <div>
-              <p className="font-semibold text-white">United Kingdom</p>
-              <p className="text-sm text-[#d4d7df]">London</p>
+            <div
+              onMouseEnter={() => setHoveredCountry("gb")}
+              onMouseLeave={() => setHoveredCountry(null)}
+              className="group cursor-pointer"
+            >
+              <p className="font-semibold text-white transition-colors group-hover:text-[#8fb4ff]">United Kingdom</p>
+              <p className="text-sm text-[#d4d7df] transition-colors group-hover:text-[#8fb4ff]">London</p>
             </div>
-            <div>
-              <p className="font-semibold text-white">Hong Kong</p>
-              <p className="text-sm text-[#d4d7df]">S.A.R China</p>
+            <div
+              onMouseEnter={() => setHoveredCountry("hk")}
+              onMouseLeave={() => setHoveredCountry(null)}
+              className="group cursor-pointer"
+            >
+              <p className="font-semibold text-white transition-colors group-hover:text-[#8fb4ff]">Hong Kong</p>
+              <p className="text-sm text-[#d4d7df] transition-colors group-hover:text-[#8fb4ff]">S.A.R China</p>
             </div>
-            <div>
-              <p className="font-semibold text-white">United Arab Emirates</p>
-              <p className="text-sm text-[#d4d7df]">Ajman</p>
+            <div
+              onMouseEnter={() => setHoveredCountry("ae")}
+              onMouseLeave={() => setHoveredCountry(null)}
+              className="group cursor-pointer"
+            >
+              <p className="font-semibold text-white transition-colors group-hover:text-[#8fb4ff]">United Arab Emirates</p>
+              <p className="text-sm text-[#d4d7df] transition-colors group-hover:text-[#8fb4ff]">Ajman</p>
             </div>
           </div>
 
