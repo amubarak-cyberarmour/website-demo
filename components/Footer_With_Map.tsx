@@ -142,7 +142,7 @@ export default function Footer_With_Map() {
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,#3a4454_0%,#273142_42%,#1f2734_100%)]" />
         <svg
           viewBox={`${minX} ${minY} ${width} ${height}`}
-          className="pointer-events-auto absolute left-[-28%] top-1/2 h-[88%] w-[96%] -translate-y-1/2 opacity-80"
+          className="pointer-events-auto absolute left-[-25%] top-1/2 h-[88%] w-[96%] -translate-y-1/2 opacity-80"
           role="img"
           aria-label="World map background"
           preserveAspectRatio="xMidYMid meet"
@@ -187,7 +187,7 @@ export default function Footer_With_Map() {
 
       {/* Foreground content in non-land (right-side) area */}
       <div className="pointer-events-none relative z-10">
-        <section className="ml-auto w-full max-w-[560px] pointer-events-auto border-l border-white/10 bg-[linear-gradient(90deg,rgba(31,32,35,0.15)_0%,rgba(31,32,35,0.78)_16%,rgba(31,32,35,0.92)_100%)] p-6 md:p-8">
+        <section className="ml-auto w-full max-w-[660px] pointer-events-auto border-l border-white/10 bg-[linear-gradient(90deg,rgba(31,32,35,0.15)_0%,rgba(31,32,35,0.78)_16%,rgba(31,32,35,0.92)_100%)] p-6 md:p-8">
           <div className="grid grid-cols-1 gap-7 md:grid-cols-2">
             <div>
               <h2 className="mb-3 text-xl font-semibold text-white">CyberArmour</h2>

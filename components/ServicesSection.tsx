@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { BarChart3, Bot, Briefcase, Megaphone, Puzzle } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { motionEase } from "./orb-ui";
 
@@ -10,35 +11,55 @@ const services = [
     accent: "#d2b36a",
     glow: "rgba(210,179,106,.18)",
     icon: "strategy",
-    items: ["AI Readiness Audit", "AI Roadmap Design", "Process Optimization Advisory"],
+    items: [
+      { title: "AI Readiness Audit", description: "assessing data, workflows, and automation potential" },
+      { title: "AI Roadmap Design", description: "defining a custom strategy for AI adoption" },
+      { title: "Process Optimization Advisory", description: "rethinking operations to align with AI systems" },
+    ],
   },
   {
     title: "Workflow Automation",
     accent: "#e7849a",
     glow: "rgba(231,132,154,.16)",
     icon: "automation",
-    items: ["CRM & Lead Automation", "Internal Process Bots", "Reporting Dashboards"],
+    items: [
+      { title: "CRM & Lead Automation", description: "automating sales and customer follow-up pipelines" },
+      { title: "Internal Process Bots", description: "automating repetitive admin and data tasks" },
+      { title: "Reporting Dashboards", description: "automated analytics and KPI tracking systems" },
+    ],
   },
   {
     title: "AI Integrations & Custom Systems",
     accent: "#78ddd5",
     glow: "rgba(120,221,213,.16)",
     icon: "integrations",
-    items: ["ChatGPT & LLM Integrations", "API Automation", "Custom AI Tools"],
+    items: [
+      { title: "ChatGPT & LLM Integrations", description: "embedding AI assistants into websites and apps" },
+      { title: "API Automation", description: "connecting third-party tools and data sources" },
+      { title: "Custom AI Tools", description: "building tailored internal AI-powered applications" },
+    ],
   },
   {
     title: "Data Intelligence & Analytics",
     accent: "#78c6f7",
     glow: "rgba(120,198,247,.15)",
     icon: "analytics",
-    items: ["Predictive Analytics", "Data Unification", "Insight Visualization"],
+    items: [
+      { title: "Predictive Analytics", description: "forecasting trends and behaviors with machine learning" },
+      { title: "Data Unification", description: "merging scattered data sources into one ecosystem" },
+      { title: "Insight Visualization", description: "interactive dashboards and data storytelling" },
+    ],
   },
   {
     title: "AI Marketing & Design",
     accent: "#edb48e",
     glow: "rgba(237,180,142,.16)",
     icon: "marketing",
-    items: ["Personalized Campaigns", "Conversational Chatbots", "Content Generation Systems"],
+    items: [
+      { title: "Personalized Campaigns", description: "using AI for audience segmentation and targeting" },
+      { title: "Conversational Chatbots", description: "automated support and lead qualification" },
+      { title: "Content Generation Systems", description: "scalable AI-based copy and visuals" },
+    ],
   },
 ];
 
@@ -48,46 +69,40 @@ const SCROLL_EASE = 0.3;
 const SNAP_THRESHOLD = 0.5;
 
 function ServiceIcon({ type, color }: { type: string; color: string }) {
+  const iconClassName = "size-[74px]";
+
+  if (type === "strategy") {
+    return <Briefcase className={iconClassName} color={color} strokeWidth={1.8} aria-hidden="true" />;
+  }
+
+  if (type === "automation") {
+    return <Bot className={iconClassName} color={color} strokeWidth={1.8} aria-hidden="true" />;
+  }
+
+  if (type === "integrations") {
+    return <Puzzle className={iconClassName} color={color} strokeWidth={1.8} aria-hidden="true" />;
+  }
+
+  if (type === "analytics") {
+    return <BarChart3 className={iconClassName} color={color} strokeWidth={1.8} aria-hidden="true" />;
+  }
+
+  if (type === "marketing") {
+    return <Megaphone className={iconClassName} color={color} strokeWidth={1.8} aria-hidden="true" />;
+  }
+
   return (
-    <svg viewBox="0 0 64 64" className="size-[74px]" aria-hidden="true">
-      {type === "strategy" ? (
-        <>
-          <path d="M15 14h28c6 0 10 4 10 10v15c0 6-4 10-10 10h-8l-6 7c-2 2-5 1-5-2v-5h-9c-6 0-10-4-10-10V24c0-6 4-10 10-10Z" fill={color} opacity="0.72" />
-          <path d="M25 25v15M32 21v23M39 27v11" stroke="#ffffff" strokeWidth="4" strokeLinecap="round" opacity="0.9" />
-        </>
-      ) : null}
-      {type === "automation" ? (
-        <>
-          <path d="M32 8 38 15l9-1 3 9-7 6 1 4 7 6-4 9-9-1-6 7-8-5-1-9-4-3-9 1-4-9 7-6v-4l-7-6 4-9 9 1 6-7 7 5Z" fill={color} opacity="0.72" />
-          <circle cx="32" cy="32" r="8" fill="#ffffff" opacity="0.88" />
-        </>
-      ) : null}
-      {type === "integrations" ? (
-        <>
-          <rect x="10" y="10" width="44" height="44" rx="13" fill={color} opacity="0.72" />
-          <path d="M21 18v28M43 18v28M21 29h8M35 35h8" stroke="#ffffff" strokeWidth="4" strokeLinecap="round" />
-          <circle cx="21" cy="31" r="5" fill="none" stroke="#ffffff" strokeWidth="4" />
-          <circle cx="43" cy="33" r="5" fill="none" stroke="#ffffff" strokeWidth="4" />
-        </>
-      ) : null}
-      {type === "analytics" ? (
-        <>
-          <path d="M32 7c12 0 22 9 22 21 0 8-4 14-10 18v4c0 4-3 7-7 7H27c-4 0-7-3-7-7v-4c-6-4-10-10-10-18C10 16 20 7 32 7Z" fill={color} opacity="0.68" />
-          <path d="m29 20-6 11h8l-4 13 13-18h-8l4-6h-7Z" fill="#ffffff" opacity="0.86" />
-          <path d="M27 50h10" stroke="#ffffff" strokeWidth="3" strokeLinecap="round" opacity="0.75" />
-        </>
-      ) : null}
-      {type === "marketing" ? (
-        <>
-          <path d="M15 14h34c5 0 8 3 8 8v18c0 5-3 8-8 8H38l-4 8c-1 3-5 3-6 0l-4-8h-9c-5 0-8-3-8-8V22c0-5 3-8 8-8Z" fill={color} opacity="0.68" />
-          <path d="M22 27c0-5 6-8 10-4 4-4 10-1 10 4 0 8-10 13-10 13S22 35 22 27Z" fill="#ffffff" opacity="0.86" />
-        </>
-      ) : null}
-    </svg>
+    <Briefcase className={iconClassName} color={color} strokeWidth={1.8} aria-hidden="true" />
   );
 }
 
 function ServiceCard({ service }: { service: (typeof services)[number] }) {
+  const [activeItem, setActiveItem] = useState<number | null>(null);
+
+  const toggleItem = (itemIndex: number) => {
+    setActiveItem((prev) => (prev === itemIndex ? null : itemIndex));
+  };
+
   return (
     <article
       className="relative flex h-[500px] w-[calc(100vw-64px)] shrink-0 flex-col justify-between overflow-hidden rounded-[8px] border border-white/80 bg-[#f5f5f5] p-8 text-[#0e1229] shadow-[inset_0_3px_1px_rgba(255,255,255,.8),0_18px_50px_rgba(14,18,41,.08)] md:h-[520px] md:w-[calc((100vw-164px)/2)] lg:h-[min(560px,64svh)] lg:min-h-[500px] lg:w-[calc((100vw-192px)/3)] lg:p-11"
@@ -100,13 +115,35 @@ function ServiceCard({ service }: { service: (typeof services)[number] }) {
       </div>
 
       <div className="space-y-0">
-        {service.items.map((item) => (
-          <div key={item} className="flex items-center gap-4 border-b border-[#0e1229]/10 py-6 text-[16px] font-semibold text-[#323d68]">
-            <span className="grid size-6 shrink-0 place-items-center rounded-[6px] bg-[#0e1229]/6">
-              <span className="size-2 rounded-full bg-[#0e1229]" />
-            </span>
-            <span className="flex-1">{item}</span>
-            <span className="text-2xl font-light leading-none opacity-80">+</span>
+        {service.items.map((item, index) => (
+          <div key={item.title} className="border-b border-[#0e1229]/10">
+            <button
+              type="button"
+              onClick={() => toggleItem(index)}
+              className="flex w-full items-center gap-4 py-6 text-left text-[16px] font-semibold text-[#323d68]"
+              aria-label={`Toggle ${item.title}`}
+              aria-expanded={activeItem === index}
+            >
+              <span className="grid size-6 shrink-0 place-items-center rounded-[6px] bg-[#0e1229]/6">
+                <span className="size-2 rounded-full bg-[#0e1229]" />
+              </span>
+              <span className="flex-1">{item.title}</span>
+              <span className="grid size-8 shrink-0 place-items-center rounded-full text-[#0e1229] opacity-80 transition-all hover:bg-[#0e1229]/10 hover:opacity-100">
+                <span
+                  className={`relative block h-4 w-4 transition-transform duration-300 ${
+                    activeItem === index ? "rotate-45" : "rotate-0"
+                  }`}
+                >
+                  <span className="absolute left-1/2 top-0 h-full w-[1.6px] -translate-x-1/2 rounded-full bg-current" />
+                  <span className="absolute left-0 top-1/2 h-[1.6px] w-full -translate-y-1/2 rounded-full bg-current" />
+                </span>
+              </span>
+            </button>
+            {activeItem === index ? (
+              <p className="pb-3 pl-10 pr-12 -mt-2 text-[16px] leading-relaxed text-[#0e1229]/65 md:text-[18px]">
+                {item.description}
+              </p>
+            ) : null}
           </div>
         ))}
       </div>
