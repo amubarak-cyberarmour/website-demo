@@ -261,7 +261,7 @@ export default function Footer_With_Map() {
 
           <div className="my-7 border-t border-white/10" />
 
-          <div className="grid grid-cols-2 gap-5 text-start md:grid-cols-4">
+          <div className="grid grid-cols-2 gap-y-5 text-start md:flex md:justify-between md:gap-8">
             <div
               onMouseEnter={() => setHoveredCountry("pk")}
               onMouseLeave={() => setHoveredCountry(null)}
