@@ -133,8 +133,8 @@ export default function Globe_With_Container_ContactUs_Page() {
         ctx.beginPath();
         geoPath(country);
         if (isActiveCountry) {
-          ctx.fillStyle = "rgba(185,241,109,0.65)";
-          ctx.strokeStyle = "rgba(50,61,104,0.8)";
+          ctx.fillStyle = "rgba(255,255,255,0.85)";
+          ctx.strokeStyle = "rgba(255,255,255,0.95)";
           ctx.lineWidth = 0.8;
         } else {
           ctx.fillStyle = "rgba(50,61,104,0.5)";
@@ -161,8 +161,8 @@ export default function Globe_With_Container_ContactUs_Page() {
         if (isActivePin) {
           const pulseSize = 7 + Math.sin(pulse * 2) * 2;
           const pulseGrad = ctx.createRadialGradient(px, py, 0, px, py, pulseSize);
-          pulseGrad.addColorStop(0, "rgba(185,241,109,0.42)");
-          pulseGrad.addColorStop(1, "rgba(185,241,109,0)");
+          pulseGrad.addColorStop(0, "rgba(0,0,0,0.3)");
+          pulseGrad.addColorStop(1, "rgba(0,0,0,0)");
           ctx.beginPath();
           ctx.arc(px, py, pulseSize, 0, Math.PI * 2);
           ctx.fillStyle = pulseGrad;
@@ -171,7 +171,7 @@ export default function Globe_With_Container_ContactUs_Page() {
 
         ctx.beginPath();
         ctx.arc(px, py, pinRadius, 0, Math.PI * 2);
-        ctx.fillStyle = isActivePin ? "#b9f16d" : "rgba(245,245,245,0.95)";
+        ctx.fillStyle = isActivePin ? "#000000" : "rgba(245,245,245,0.95)";
         ctx.fill();
         ctx.strokeStyle = isActivePin ? "rgba(14,18,41,0.85)" : "rgba(14,18,41,0.3)";
         ctx.lineWidth = 1;
@@ -292,8 +292,8 @@ export default function Globe_With_Container_ContactUs_Page() {
               className="pointer-events-auto inline-flex min-w-[64px] flex-col items-center justify-center px-1 py-0.5 text-[12px] leading-none transition"
             >
               <span className={`mb-1 transition-transform duration-300 ${isActive ? "scale-110" : ""}`}>{office.flag}</span>
-              <span className={`text-[10px] font-semibold ${isActive ? "text-white" : "text-[#0e1229]"}`}>{office.city}</span>
-              <span className={`mt-0.5 text-[9px] uppercase tracking-[0.04em] ${isActive ? "text-white/80" : "text-[#6f7280]"}`}>
+              <span className={`text-[10px] font-semibold ${isActive ? "text-black" : "text-[#323d68]"}`}>{office.city}</span>
+              <span className={`mt-0.5 text-[9px] uppercase tracking-[0.04em] ${isActive ? "text-black/75" : "text-[#323d68]"}`}>
                 {office.country}
               </span>
             </button>
