@@ -268,7 +268,7 @@ export default function Globe_With_Container_ContactUs_Page() {
   return (
     <div
       ref={containerRef}
-      className="relative h-[320px] rounded-[10px] bg-transparent pb-12 md:h-[360px] md:pb-14"
+      className="relative h-[270px] rounded-[10px] bg-transparent pb-16 sm:h-[300px] sm:pb-14 md:h-[360px] md:pb-14"
     >
       <div className="absolute inset-0 flex items-center justify-center">
         <canvas ref={canvasRef} className="block h-full w-full" />
@@ -279,7 +279,7 @@ export default function Globe_With_Container_ContactUs_Page() {
         </div>
       )}
 
-      <div className="absolute inset-x-0 bottom-1 flex items-end justify-center gap-3 md:bottom-1.5">
+      <div className="absolute inset-x-0 bottom-1 flex flex-wrap items-end justify-center gap-x-3 gap-y-1 px-2 sm:flex-nowrap sm:px-0 md:bottom-1.5">
         {offices.map((office, index) => {
           const isActive = activeOffice === index;
           return (
@@ -289,7 +289,7 @@ export default function Globe_With_Container_ContactUs_Page() {
               onMouseEnter={() => onOfficeEnter(index)}
               onMouseLeave={onOfficeLeave}
               aria-label={`${office.city}, ${office.country}`}
-              className="pointer-events-auto inline-flex min-w-[64px] flex-col items-center justify-center px-1 py-0.5 text-[12px] leading-none transition"
+              className="pointer-events-auto inline-flex min-w-[56px] flex-col items-center justify-center px-1 py-0.5 text-[12px] leading-none transition sm:min-w-[64px]"
             >
               <span className={`mb-1 transition-transform duration-300 ${isActive ? "scale-110" : ""}`}>{office.flag}</span>
               <span className={`text-[10px] font-semibold ${isActive ? "text-black" : "text-[#323d68]"}`}>{office.city}</span>

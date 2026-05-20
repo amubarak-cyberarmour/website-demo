@@ -1,43 +1,74 @@
 "use client";
 
 import { motion } from "framer-motion";
-import type { CSSProperties } from "react";
+import { Building2, HeartPulse, Landmark, RadioTower, ShieldCheck, Store } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { motionEase } from "./orb-ui";
 
-const orbitCards = [
+const firstRowCards = [
   {
     title: "Government Agencies",
     description: "Cyber resilience, monitoring, and incident readiness for public infrastructure.",
+    icon: Landmark,
   },
   {
     title: "Financial Services",
     description: "Fraud prevention and data protection for banks, fintech, and regulated teams.",
+    icon: Building2,
   },
   {
     title: "Communications Providers",
     description: "Telecom and ISP security against disruption, attacks, and data compromise.",
+    icon: RadioTower,
   },
 ];
 
-function OrbitCustomersVisual() {
+const secondRowCards = [
+  {
+    title: "Healthcare",
+    description: "Secure patient data, strengthen compliance posture, and reduce operational risk.",
+    icon: HeartPulse,
+  },
+  {
+    title: "E-Commerce",
+    description: "Protect payment flows, customer accounts, and high-volume digital storefronts.",
+    icon: Store,
+  },
+  {
+    title: "Enterprise SaaS",
+    description: "Harden cloud platforms, identity layers, and customer-facing applications.",
+    icon: ShieldCheck,
+  },
+];
+
+function IndustryCard({ title, description, icon: Icon }: { title: string; description: string; icon: LucideIcon }) {
   return (
-    <div className="customers-orbit" aria-hidden="true">
-      <div className="customers-orbit-crop">
-        <ul className="customers-orbit-list" style={{ ["--count" as string]: orbitCards.length } as CSSProperties}>
-          {orbitCards.map((card, index) => (
-            <li key={`orbit-${card.title}`} style={{ ["--item-index" as string]: index } as CSSProperties}>
-              <div className="customers-orbit-card">
-                <span className="customers-orbit-name">{card.title}</span>
-                <span className="customers-orbit-copy">{card.description}</span>
-              </div>
-            </li>
-          ))}
-        </ul>
-        <div className="customers-orbit-circle customers-orbit-circle-last" />
-        <div className="customers-orbit-circle customers-orbit-circle-second" />
+    <article className="customers-marquee-card">
+      <div className="customers-marquee-icon-wrap">
+        <Icon className="customers-marquee-icon" aria-hidden="true" />
       </div>
-      <div className="customers-orbit-mask" />
-      <div className="customers-orbit-circle customers-orbit-circle-center" />
+      <h3 className="customers-marquee-title">{title}</h3>
+      <p className="customers-marquee-copy">{description}</p>
+    </article>
+  );
+}
+
+function MarqueeLane({
+  cards,
+  reverse = false,
+}: {
+  cards: { title: string; description: string; icon: LucideIcon }[];
+  reverse?: boolean;
+}) {
+  const loopCards = [...cards, ...cards];
+
+  return (
+    <div className="customers-marquee-lane" aria-hidden="true">
+      <div className={`customers-marquee-track ${reverse ? "customers-marquee-track-reverse" : ""}`}>
+        {loopCards.map((card, index) => (
+          <IndustryCard key={`${card.title}-${index}`} title={card.title} description={card.description} icon={card.icon} />
+        ))}
+      </div>
     </div>
   );
 }
@@ -67,11 +98,11 @@ export function CustomersSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.65, ease: motionEase }}
-          className="mb-12 md:mb-16"
+          className="customers-marquee-shell"
         >
-          <OrbitCustomersVisual />
+          <MarqueeLane cards={firstRowCards} />
+          <MarqueeLane cards={secondRowCards} reverse />
         </motion.div>
-
       </div>
     </section>
   );
