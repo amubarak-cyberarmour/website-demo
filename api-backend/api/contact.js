@@ -2,9 +2,15 @@ import nodemailer from "nodemailer";
 
 const RECIPIENT = "info@cyberarmour.pk";
 
-function setCors(res) {
-  const allowOrigin = process.env.CORS_ORIGIN || "https://webdemo.cyberarmour.pk";
-  res.setHeader("Access-Control-Allow-Origin", allowOrigin);
+function setCors(req, res) {
+  const configured = process.env.CORS_ORIGIN || "https://webdemo.cyberarmour.pk,https://cyberarmour.pk,https://www.cyberarmour.pk";
+  const allowedOrigins = configured.split(",").map((value) => value.trim()).filter(Boolean);
+  const requestOrigin = req.headers.origin;
+  const fallbackOrigin = allowedOrigins[0] || "https://webdemo.cyberarmour.pk";
+  const resolvedOrigin = requestOrigin && allowedOrigins.includes(requestOrigin) ? requestOrigin : fallbackOrigin;
+
+  res.setHeader("Access-Control-Allow-Origin", resolvedOrigin);
+  res.setHeader("Vary", "Origin");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 }
@@ -31,7 +37,7 @@ function escapeHtml(value) {
 }
 
 export default async function handler(req, res) {
-  setCors(res);
+  setCors(req, res);
 
   if (req.method === "OPTIONS") return res.status(200).end();
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });

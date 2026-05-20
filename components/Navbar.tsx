@@ -46,6 +46,18 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", updateNavbarSurface);
   }, []);
 
+  useEffect(() => {
+    const syncMenuForViewport = () => {
+      if (window.innerWidth >= 1280) {
+        setOpen(false);
+      }
+    };
+
+    syncMenuForViewport();
+    window.addEventListener("resize", syncMenuForViewport, { passive: true });
+    return () => window.removeEventListener("resize", syncMenuForViewport);
+  }, []);
+
   return (
     <header className="fixed inset-x-0 top-0 z-[9999] bg-transparent">
       <div
@@ -60,10 +72,10 @@ export function Navbar() {
             : "bg-[#f5f5f5] shadow-none backdrop-blur-0"
         }`}
       >
-        <div className="grid h-[68px] grid-cols-[1fr_auto] items-center px-4 sm:px-8 md:grid-cols-[1fr_auto_1fr] md:px-10 lg:px-12">
+        <div className="grid h-[68px] grid-cols-[1fr_auto] items-center px-4 sm:px-8 lg:px-10 xl:grid-cols-[1fr_auto_1fr] xl:px-12">
           <Logo />
 
-          <div className="hidden items-center gap-[42px] md:flex">
+          <div className="hidden items-center gap-[28px] xl:flex 2xl:gap-[42px]">
             {navbarItems.map((item) => (
               <a
                 key={item.label}
@@ -75,7 +87,7 @@ export function Navbar() {
             ))}
           </div>
 
-          <div className="hidden justify-self-end md:block">
+          <div className="hidden justify-self-end xl:block">
             <motion.a
               href="/contact"
               whileHover={{ y: -2 }}
@@ -90,7 +102,7 @@ export function Navbar() {
           <button
             type="button"
             onClick={() => setOpen((value) => !value)}
-            className="grid size-11 place-items-center rounded-[10px] bg-black text-white md:hidden"
+            className="grid size-11 place-items-center rounded-[10px] bg-black text-white xl:hidden"
             aria-label="Toggle navigation"
             aria-expanded={open}
           >
@@ -109,7 +121,7 @@ export function Navbar() {
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.28, ease: motionEase }}
-              className={`overflow-hidden border-t border-white/50 transition-all duration-500 md:hidden ${
+              className={`overflow-hidden border-t border-white/50 transition-all duration-500 xl:hidden ${
                 isScrolled ? "bg-[#f5f5f5]/55 backdrop-blur-2xl" : "bg-[#f5f5f5] backdrop-blur-0"
               }`}
             >

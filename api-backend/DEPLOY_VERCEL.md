@@ -10,7 +10,7 @@
 - `SMTP_USER`
 - `SMTP_PASS`
 - `SMTP_FROM` (usually same as SMTP_USER)
-- `CORS_ORIGIN=https://webdemo.cyberarmour.pk`
+- `CORS_ORIGIN=https://webdemo.cyberarmour.pk,https://cyberarmour.pk,https://www.cyberarmour.pk`
 
 ## 3) Deploy
 - Click Deploy

@@ -68,14 +68,12 @@ export default function Globe_With_Container_ContactUs_Page() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const W = container.clientWidth;
-    const H = container.clientHeight;
-    canvas.width = W;
-    canvas.height = H;
-    const cx = W / 2;
+    let W = 0;
+    let H = 0;
+    let cx = 0;
     // Lift the globe a bit so the office flag row has clear breathing room.
-    const cy = H * 0.41;
-    const R = Math.min(W, H) * 0.37;
+    let cy = 0;
+    let R = 0;
 
     let rotLon = -20;
     let rotLat = -15;
@@ -88,8 +86,23 @@ export default function Globe_With_Container_ContactUs_Page() {
     let pulse = 0;
     let frameId = 0;
     let mounted = true;
+    let resizeRaf = 0;
 
     let worldData: CountryFeature[] = [];
+
+    const syncCanvasSize = () => {
+      W = container.clientWidth;
+      H = container.clientHeight;
+      const dpr = Math.max(1, window.devicePixelRatio || 1);
+      canvas.width = Math.floor(W * dpr);
+      canvas.height = Math.floor(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      cx = W / 2;
+      cy = H * 0.41;
+      R = Math.min(W, H) * 0.37;
+    };
+
+    syncCanvasSize();
 
     const projection = () =>
       d3.geoOrthographic().scale(R).translate([cx, cy]).clipAngle(90).rotate([rotLon, rotLat, 0]);
@@ -245,9 +258,17 @@ export default function Globe_With_Container_ContactUs_Page() {
       __leaveOffice?: () => void;
     }).__leaveOffice = leaveOffice;
 
+    const resizeObserver = new ResizeObserver(() => {
+      cancelAnimationFrame(resizeRaf);
+      resizeRaf = requestAnimationFrame(syncCanvasSize);
+    });
+    resizeObserver.observe(container);
+
     return () => {
       mounted = false;
       cancelAnimationFrame(frameId);
+      cancelAnimationFrame(resizeRaf);
+      resizeObserver.disconnect();
     };
   }, []);
 
