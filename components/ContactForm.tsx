@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { apiUrl } from "@/lib/apiClient";
 
 type Status = { type: "success" | "error"; message: string } | null;
 
@@ -28,7 +29,7 @@ export default function ContactForm() {
 
     try {
       setIsSubmitting(true);
-      const response = await fetch("/api/contact", {
+      const response = await fetch(apiUrl("/api/contact"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

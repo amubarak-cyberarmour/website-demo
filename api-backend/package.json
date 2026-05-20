@@ -1,0 +1,8 @@
+{
+  "name": "cyberarmour-api-backend",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "nodemailer": "^8.0.7"
+  }
+}

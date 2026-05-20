@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import world from "@svg-maps/world";
+import { apiUrl } from "@/lib/apiClient";
 
 const locations = world.locations as Array<{ id: string; path: string }>;
 
@@ -110,7 +111,7 @@ export default function Footer_With_Map() {
     setMessage("");
 
     try {
-      const response = await fetch("/api/newsletter", {
+      const response = await fetch(apiUrl("/api/newsletter"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: value }),

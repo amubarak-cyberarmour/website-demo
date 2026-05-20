@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { apiUrl } from "@/lib/apiClient";
 
 export default function Footer() {
   const [email, setEmail] = useState("");
@@ -28,7 +29,7 @@ export default function Footer() {
     setMessage("");
 
     try {
-      const response = await fetch("/api/newsletter", {
+      const response = await fetch(apiUrl("/api/newsletter"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: value }),
