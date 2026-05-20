@@ -134,8 +134,8 @@ export default function Globe_With_Container_ContactUs_Page() {
         geoPath(country);
         if (isActiveCountry) {
           ctx.fillStyle = "rgba(255,255,255,0.85)";
-          ctx.strokeStyle = "rgba(255,255,255,0.95)";
-          ctx.lineWidth = 0.8;
+          ctx.strokeStyle = "rgba(0,0,0,0.96)";
+          ctx.lineWidth = 1.05;
         } else {
           ctx.fillStyle = "rgba(50,61,104,0.5)";
           ctx.strokeStyle = "rgba(14,18,41,0.22)";

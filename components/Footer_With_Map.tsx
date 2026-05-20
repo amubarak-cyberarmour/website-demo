@@ -159,12 +159,15 @@ export default function Footer_With_Map() {
                 <path
                   key={loc.id}
                   d={loc.path}
-                  fill={shouldFill ? "#ef4444" : "#8f97a5"}
-                  stroke="#5f6673"
-                  strokeWidth={0.45}
+                  fill={shouldFill ? "#ffffff" : "#8f97a5"}
+                  stroke={shouldFill ? "#ffffff" : "#5f6673"}
+                  strokeWidth={shouldFill ? 0.7 : 0.45}
                   style={{
-                    transition: isHighlight || loc.id === "cn" ? "fill 0.35s ease" : undefined,
-                    opacity: shouldFill ? 0.55 : 1,
+                    transition: isHighlight || loc.id === "cn" ? "fill 0.35s ease, filter 0.35s ease" : undefined,
+                    opacity: shouldFill ? 1 : 1,
+                    filter: shouldFill
+                      ? "drop-shadow(0 0 1px rgba(0,0,0,0.95)) drop-shadow(0 0 5px rgba(0,0,0,0.85)) drop-shadow(0 0 9px rgba(255,255,255,0.75))"
+                      : undefined,
                   }}
                 />
               );
@@ -240,7 +243,7 @@ export default function Footer_With_Map() {
                   <button
                     type="submit"
                     disabled={status === "loading"}
-                    className="relative z-10 grid h-12 w-[56px] shrink-0 place-items-center border-l border-white/25 bg-[#0e1229] text-[22px] font-semibold leading-none text-[#f7f4ed] transition-colors hover:bg-[#1c2550] disabled:cursor-not-allowed disabled:opacity-70"
+                    className="relative z-10 grid h-12 w-[56px] shrink-0 place-items-center border-l border-white/25 bg-black text-[22px] font-semibold leading-none text-white transition-colors hover:bg-white hover:text-black disabled:cursor-not-allowed disabled:opacity-70"
                     aria-label="Submit newsletter subscription"
                   >
                     {status === "loading" ? "..." : "→"}
